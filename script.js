@@ -1,13 +1,39 @@
-// https://api.openweathermap.org/data/2.5/weather?q=alwar&appid=5d0d1225924d886bc267c47bdf4a2e40
+// http://api.weatherapi.com/v1/current.json?key=021008e175c842cda0c91311241107&q=Mumbai&aqi=no
 
-let target = 'alwar'
-const fetchResults = async (targetlocation) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${targetlocation}&appid=5d0d1225924d886bc267c47bdf4a2e40`
-    const res = await fetch(url)
-    const data = await res.json()
+const temperatureField = document.querySelector(".temp");
+const locationField = document.querySelector(".time_location p");
+const dateandTimefield = document.querySelector(".time_location span");
+const conditionField = document.querySelector(".condition p");
+const searchField = document.querySelector(".search_area");
+const form = document.querySelector("form");
 
-    console.log(data)
+form?.addEventListener(`submit`, searchforlocation);
 
+let target = "Mumbai";
+const fetchResults = async (targetLocation) => {
+  let url = `http://api.weatherapi.com/v1/current.json?key=021008e175c842cda0c91311241107&q=${targetLocation}&aqi=no`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  console.log(data);
+
+  let locationName = data.location.name;
+  let time = data.location.localtime;
+
+  let temp = data.current.temp_c;
+  let condition = data.current.condition.text;
+  updateDetails(temp, locationName, time, condition);
+};
+function updateDetails(temp, locationName, time, condition) {
+  temperatureField.innerText = temp;
+  locationField.innerText = locationName;
+  dateandTimefield.innerText = time;
+  conditionField.innerText = condition;
 }
+function searchforlocation(e) {
+  e.preventDefault();
+  target = searchField.value;
 
-fetchResults(target)
+  fetchResults(target);
+}
+fetchResults(target);
